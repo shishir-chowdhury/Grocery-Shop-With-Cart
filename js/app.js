@@ -8,7 +8,7 @@ loadProducts();
 
 // show all product in UI 
 const showProducts = (products) => {
-  console.log(products);
+  // console.log(products);
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
     const image = product.images;
@@ -22,11 +22,33 @@ const showProducts = (products) => {
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button id="details-btn" class="btn btn-danger" onclick="productDetails(${product.id})" data-bs-toggle="modal" data-bs-target="#exampleModal">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+const productDetails = productID => {
+  const url = `https://fakestoreapi.com/products/${productID}`;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => displayProductDetails(data));
+}
+productDetails();
+const displayProductDetails = pro => {
+  console.log(pro);
+  const proDetails = document.getElementById("product-details");
+  proDetails.textContent = '';
+  const div = document.createElement('div');
+  div.classList.add('card');
+  div.innerHTML = `
+        <img src="${pro.image}" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h3 class="card-title">${pro.title}</h3>
+          <p class="card-text">${pro.description}</p>
+        </div>
+    `;
+  proDetails.appendChild(div);
+}
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
